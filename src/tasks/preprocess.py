@@ -1,5 +1,6 @@
 import sys
 import logging
+import ast
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +25,21 @@ def validate_fields_cols(df: DataFrame, field_validations: list) -> tuple:
     """
     error_columns = []
     for validation in field_validations:
-        field = validation['field']
-        validations = validation['validations']
+        field = validation["field"]
+        validations = validation["validations"]
         for v in validations:
             error_col_name = f"{field}_{v}"  # New column name for error
             error_columns.append(error_col_name)
-            if 'notEmpty' in v:
-                df = df.withColumn(error_col_name, when(col(field) == "", lit("KO")).otherwise(lit("OK")))
-            if 'notNull' in v:
-                df = df.withColumn(error_col_name, when(col(field).isNull(), lit("KO")).otherwise(lit("OK")))
+            if "notEmpty" in v:
+                df = df.withColumn(
+                    error_col_name,
+                    when(col(field) == "", lit("KO")).otherwise(lit("OK")),
+                )
+            if "notNull" in v:
+                df = df.withColumn(
+                    error_col_name,
+                    when(col(field).isNull(), lit("KO")).otherwise(lit("OK")),
+                )
     return df, error_columns
 
 
@@ -121,7 +128,9 @@ def validate_fields(input_df: DataFrame, steps: list) -> tuple:
         tuple: A tuple containing the DataFrame with valid rows and DataFrame with invalid rows.
     """
     validated_df, val_cols = validate_fields_cols(input_df, steps)
-    validated_df_OK, validated_df_NOTOK = filter_by_column_values(validated_df, val_cols)
+    validated_df_OK, validated_df_NOTOK = filter_by_column_values(
+        validated_df, val_cols
+    )
     validated_df_NOTOK = struct_columns_to_single_column(validated_df_NOTOK, val_cols)
     validated_df_NOTOK = add_current_timestamp(validated_df_NOTOK)
     return validated_df_OK, validated_df_NOTOK
@@ -139,8 +148,8 @@ def add_fields(input_df: DataFrame, params: list) -> list:
         list: List containing the modified DataFrame.
     """
     for item in params:
-        column_name = item['name']
-        function_name = item['function']
+        column_name = item["name"]
+        function_name = item["function"]
 
         # Get the function object dynamically
         function = globals()[function_name]
@@ -206,6 +215,7 @@ def execute_tasks(spark: SparkSession, sc, metadata_input: dict) -> None:
 if __name__ == "__main__":
     sc, spark = get_spark_session()
 
-    metadata = str(sys.argv[1])
+    metadata = ast.literal_eval(str(sys.argv[1]))
+
     execute_tasks(spark, sc, metadata)
     sc.stop()

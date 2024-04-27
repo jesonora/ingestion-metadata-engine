@@ -23,7 +23,7 @@ def get_spark_session(
     conf = SparkConf()
 
     conf.set("spark.sql.shuffle.partitions", str(shuffle_partitions))
-    conf.set('spark.sql.jsonGenerator.ignoreNullFields', 'False')
+    conf.set("spark.sql.jsonGenerator.ignoreNullFields", "False")
 
     sc = SparkContext.getOrCreate(SparkContext(conf=conf))
 

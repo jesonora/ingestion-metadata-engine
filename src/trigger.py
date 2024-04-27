@@ -25,11 +25,6 @@ class TriggerPipeline(luigi.WrapperTask):
         $ python
         -m luigi
         --module main TriggerPipeline
-        --config-path=/work/regional-actuarial-platform/config/config.yml
-        --logging-conf-file=/work/regional-actuarial-platform/config/logging.cfg
-        --force-restart
-        --month=2
-        --year=2020
 
     :ivar config_path:
         Path to the config file, default value: '/local/application/conf/config.yml'.

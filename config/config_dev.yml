@@ -2,7 +2,7 @@ metadata:
   sources:
     - name: person_inputs
       params:
-        path: output_file1.json
+        path: /opt/workspace/ingestion-metadata-engine/data/input/events/person/*.json
         format: JSON
   transformations:
     - name: validation
@@ -34,12 +34,18 @@ metadata:
     - input: final_ok
       name: raw-ok
       params:
-        path: raw-ok.json
+        path: /opt/workspace/ingestion-metadata-engine/data/output/events/person/raw-ok.json
         format: JSON
         mode: overwrite
     - input: validation_notok
       name: raw-notok
       params:
-        path: raw-notok.json
+        path: /opt/workspace/ingestion-metadata-engine/data/output/discards/person/raw-notok.json
+        format: JSON
+        mode: overwrite
+    - input: validation_notok
+      name: raw-notok
+      params:
+        path: /opt/workspace/ingestion-metadata-engine/data/output/discards/person/raw-notok.parquet
         format: JSON
         mode: overwrite

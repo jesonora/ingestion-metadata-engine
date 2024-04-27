@@ -20,4 +20,4 @@ class PreProcessRawFile(SparkTemplate):
         Return the outputs.
 
         """
-        return LocalTarget('words.txt')
+        return LocalTarget("words.txt")

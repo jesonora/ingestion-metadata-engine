@@ -11,7 +11,9 @@ class TaskTemplate(Task):
     :ivar metadata:
 
     """
+
     metadata = luigi.DictParameter()
+
 
 class SparkTemplate(SparkSubmitTask, TaskTemplate):
     """
@@ -20,6 +22,4 @@ class SparkTemplate(SparkSubmitTask, TaskTemplate):
     """
 
     def app_options(self):
-        return [
-            self.metadata
-        ]
+        return [self.metadata]
