@@ -1,13 +1,12 @@
+import logging
+import warnings
+from datetime import date, datetime, timedelta
+
 import luigi
 import yaml
-import logging
-from datetime import datetime, timedelta, date
-
 from luigi import IntParameter, Parameter
 
-from src.tasks.process_task import PreProcessRawFile
-
-import warnings
+from src.tasks.transform_task import TransfromInput
 
 warnings.filterwarnings("ignore")
 
@@ -58,6 +57,12 @@ class TriggerPipeline(luigi.WrapperTask):
 
         for dataflow in config_dict.items():
 
-            tasks.append(PreProcessRawFile(dataflow[1]))
+            kw_args = {
+                "close_date": close_date,
+                "params": dataflow[1],
+                "name": dataflow[0],
+            }
+
+            tasks.append(TransfromInput(**kw_args))
 
         yield tasks

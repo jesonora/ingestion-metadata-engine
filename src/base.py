@@ -1,25 +1,45 @@
 import luigi
-from luigi import Task
 from luigi.contrib.spark import SparkSubmitTask
 
 
-class TaskTemplate(Task):
-    """This class creates the dependencies ofthe pipeline. While reading the dictionary of tasks from the
-    trigger class, it builds the graphs using the available tasks in the catalogue.
+class TaskTemplate(luigi.Task):
+    """
+    This class defines a template for Luigi tasks that serve as dependencies in the pipeline.
+    It builds the dependency graph by reading tasks from a dictionary provided as metadata.
 
-
-    :ivar metadata:
-
+    :param metadata: A dictionary containing task dependencies.
+    :type metadata: dict
     """
 
-    metadata = luigi.DictParameter()
+    params = luigi.DictParameter()
+    close_date = luigi.DateHourParameter()
+    name = luigi.Parameter()
+    logs_root = luigi.Parameter(
+        default="/opt/workspace/ingestion-metadata-engine/data/logs"
+    )
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initializes the TaskTemplate instance.
+
+        :param args: Positional arguments.
+        :param kwargs: Keyword arguments.
+        """
+        super().__init__(*args, **kwargs)
+        self.yyyymmdd_string = self.close_date.strftime("%Y%m%d")
 
 
 class SparkTemplate(SparkSubmitTask, TaskTemplate):
     """
-    This class creates the dependencies ofthe pipeline. While reading the dictionary of tasks from the
-    trigger class, it builds the graphs using the available tasks in the catalogue.
+    This class extends SparkSubmitTask and serves as a template for Spark jobs within the pipeline.
+    It builds the dependency graph by reading tasks from a dictionary provided as metadata.
     """
 
     def app_options(self):
-        return [self.metadata]
+        """
+        Returns a list of options to be passed to the Spark application.
+
+        :return: A list of Spark application options.
+        :rtype: list
+        """
+        return [self.params, self.logs_root, self.yyyymmdd_string, self.name]

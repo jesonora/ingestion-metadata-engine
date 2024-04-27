@@ -1,4 +1,4 @@
-metadata:
+dataflow1:
   sources:
     - name: person_inputs
       params:
