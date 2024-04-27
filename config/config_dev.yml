@@ -49,3 +49,37 @@ dataflow1:
         path: /opt/workspace/ingestion-metadata-engine/data/output/discards/person/raw-notok.parquet
         format: JSON
         mode: overwrite
+dataflow2:
+  sources:
+    - name: person_inputs
+      params:
+        path: /opt/workspace/ingestion-metadata-engine/data/input/events/person/*.json
+        format: JSON
+  transformations:
+    - name: validation
+      type: validate_fields
+      params:
+        input: person_inputs
+        steps:
+          - field: office
+            validations:
+              - notEmpty
+          - field: age
+            validations:
+              - notNull
+        outputs:
+          output_ok: validation_ok
+          output_notok: validation_notok
+  outputs:
+    - input: validation_ok
+      name: raw-ok
+      params:
+        path: /opt/workspace/ingestion-metadata-engine/data/output/events/person/2raw-ok.json
+        format: JSON
+        mode: overwrite
+    - input: validation_notok
+      name: raw-notok
+      params:
+        path: /opt/workspace/ingestion-metadata-engine/data/output/discards/person/2raw-notok.json
+        format: JSON
+        mode: overwrite

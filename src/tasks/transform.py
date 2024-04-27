@@ -183,7 +183,7 @@ def execute_tasks(
     params_input: dict,
     log_root: str,
     yyyymmdd_string: str,
-    name: str,
+    transformation_name: str,
 ) -> None:
     """
     Execute tasks specified in the metadata input.
@@ -217,7 +217,7 @@ def execute_tasks(
         save_output(outputs_dict[output["input"]], **output["params"])
 
     # Create the file name with "_OK.logs" extension
-    file_name = os.path.join(log_root, f"{name}_{yyyymmdd_string}_OK.logs")
+    file_name = os.path.join(log_root, f"{transformation_name}_{yyyymmdd_string}_OK.logs")
 
     # Create the file
     with open(file_name, "w") as f:
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     params = ast.literal_eval(str(sys.argv[1]))
     log_root = str(sys.argv[2])
     yyyymmdd_string = str(sys.argv[3])
-    name = str(sys.argv[4])
+    transformation_name = str(sys.argv[4])
 
-    execute_tasks(spark, params, log_root, yyyymmdd_string, name)
+    execute_tasks(spark, params, log_root, yyyymmdd_string, transformation_name)
     sc.stop()

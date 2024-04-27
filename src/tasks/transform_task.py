@@ -24,6 +24,6 @@ class TransfromInput(SparkTemplate):
         :rtype: luigi.LocalTarget
         """
         output_file = os.path.join(
-            self.logs_root, f"{self.name}_{self.yyyymmdd_string}_OK.logs"
+            self.logs_root, f"{self.transformation_name}_{self.yyyymmdd_string}_OK.logs"
         )
         return LocalTarget(output_file)

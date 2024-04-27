@@ -13,7 +13,7 @@ class TaskTemplate(luigi.Task):
 
     params = luigi.DictParameter()
     close_date = luigi.DateHourParameter()
-    name = luigi.Parameter()
+    transformation_name = luigi.Parameter()
     logs_root = luigi.Parameter(
         default="/opt/workspace/ingestion-metadata-engine/data/logs"
     )
@@ -42,4 +42,4 @@ class SparkTemplate(SparkSubmitTask, TaskTemplate):
         :return: A list of Spark application options.
         :rtype: list
         """
-        return [self.params, self.logs_root, self.yyyymmdd_string, self.name]
+        return [self.params, self.logs_root, self.yyyymmdd_string, self.transformation_name]

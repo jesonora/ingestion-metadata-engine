@@ -4,3 +4,4 @@ luigi
 pyyaml
 flake8
 black
+isort
