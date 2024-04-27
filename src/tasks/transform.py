@@ -1,13 +1,13 @@
-import sys
-import logging
 import ast
+import logging
+import os
+import sys
 
 logger = logging.getLogger(__name__)
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, current_timestamp, lit, when
+from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
-from pyspark.sql import DataFrame
+from pyspark.sql.functions import col, current_timestamp, lit, when
 
 from src.support import get_spark_session
 
@@ -178,7 +178,13 @@ transform_funcs_dict["validate_fields"] = validate_fields
 transform_funcs_dict["add_fields"] = add_fields
 
 
-def execute_tasks(spark: SparkSession, sc, metadata_input: dict) -> None:
+def execute_tasks(
+    spark: SparkSession,
+    params_input: dict,
+    log_root: str,
+    yyyymmdd_string: str,
+    transformation_name: str,
+) -> None:
     """
     Execute tasks specified in the metadata input.
 
@@ -190,12 +196,11 @@ def execute_tasks(spark: SparkSession, sc, metadata_input: dict) -> None:
     outputs_dict = {}
 
     # Load input data from sources
-    for source in metadata_input["sources"]:
+    for source in params_input["sources"]:
         outputs_dict[source["name"]] = load_input(spark, **source["params"])
 
     # Perform transformations
-    for transformation in metadata_input["transformations"]:
-        transformation_name = transformation["name"]
+    for transformation in params_input["transformations"]:
         transformation_type = transformation["type"]
         params = transformation["params"]
         input_df = params["input"]
@@ -208,14 +213,24 @@ def execute_tasks(spark: SparkSession, sc, metadata_input: dict) -> None:
         outputs_dict = {**temp, **outputs_dict}
 
     # Save output data
-    for output in metadata_input["outputs"]:
+    for output in params_input["outputs"]:
         save_output(outputs_dict[output["input"]], **output["params"])
+
+    # Create the file name with "_OK.logs" extension
+    file_name = os.path.join(log_root, f"{transformation_name}_{yyyymmdd_string}_OK.logs")
+
+    # Create the file
+    with open(file_name, "w") as f:
+        f.write("Log file created successfully!")
 
 
 if __name__ == "__main__":
     sc, spark = get_spark_session()
 
-    metadata = ast.literal_eval(str(sys.argv[1]))
+    params = ast.literal_eval(str(sys.argv[1]))
+    log_root = str(sys.argv[2])
+    yyyymmdd_string = str(sys.argv[3])
+    transformation_name = str(sys.argv[4])
 
-    execute_tasks(spark, sc, metadata)
+    execute_tasks(spark, params, log_root, yyyymmdd_string, transformation_name)
     sc.stop()

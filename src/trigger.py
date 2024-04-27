@@ -1,13 +1,12 @@
+import logging
+import warnings
+from datetime import date, datetime, timedelta
+
 import luigi
 import yaml
-import logging
-from datetime import datetime, timedelta, date
-
 from luigi import IntParameter, Parameter
 
-from src.tasks.process_task import PreProcessRawFile
-
-import warnings
+from src.tasks.transform_task import TransfromInput
 
 warnings.filterwarnings("ignore")
 
@@ -18,7 +17,7 @@ class TriggerPipeline(luigi.WrapperTask):
     """Wrap up all the tasks for the pipeline into a single task
     So we can run this pipeline by calling this dummy task.
 
-    The task transform the config.yml file into a dictionary. Also passes the authentication details as a dictionary
+    The task transforms the config.yml file into a dictionary. Also passes the authentication details as a dictionary
     to the next task.
 
     Usage::
@@ -36,11 +35,10 @@ class TriggerPipeline(luigi.WrapperTask):
         Day to process, default value: datetime.date.today().day.
     """
 
-    config_path = Parameter(default="/app/config/config_prod.yml")
-
-    year = IntParameter(default=date.today().year)
-    month = IntParameter(default=date.today().month)
-    day = IntParameter(default=date.today().day)
+    config_path = luigi.Parameter(default="/opt/workspace/ingestion-metadata-engine/config/config_dev.yml")
+    year = luigi.IntParameter(default=date.today().year)
+    month = luigi.IntParameter(default=date.today().month)
+    day = luigi.IntParameter(default=date.today().day)
 
     def requires(self):
         """
@@ -48,16 +46,19 @@ class TriggerPipeline(luigi.WrapperTask):
         """
 
         input_date = datetime(year=self.year, month=self.month, day=self.day)
-
         close_date = input_date - timedelta(days=1)
 
         with open(self.config_path) as f:
             config_dict = yaml.safe_load(f)
 
-        tasks = list()
+        tasks = []
 
         for dataflow in config_dict.items():
+            kw_args = {
+                "close_date": close_date,
+                "params": dataflow[1],
+                "transformation_name": dataflow[0],
+            }
+            tasks.append(TransformInput(**kw_args))
 
-            tasks.append(PreProcessRawFile(dataflow[1]))
-
-        yield tasks
+        return tasks

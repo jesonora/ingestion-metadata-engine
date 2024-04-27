@@ -1,11 +1,10 @@
 import logging
-import pandas as pd
-
 from typing import Union
-from pyspark import SparkContext, SparkConf
-from pyspark.sql import functions as F, SparkSession
-
 from warnings import simplefilter
+
+import pandas as pd
+from pyspark import SparkConf, SparkContext
+from pyspark.sql import SparkSession
 
 simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 
