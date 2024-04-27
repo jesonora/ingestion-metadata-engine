@@ -6,6 +6,9 @@ This project is a metadata ingestion engine developed using Apache Spark. It ena
 
 ## Getting Started
 
+### Solution overview
+![solution](img/solution.png)
+
 ### Prerequisites
 
 - Apache Spark (version 3.5.1)
@@ -14,7 +17,7 @@ This project is a metadata ingestion engine developed using Apache Spark. It ena
 
 ### Installation
 
-In the followin repository you could find an easy to handle way to run Spark, `https://github.com/jesonora/spark-infra`.
+In the following repository you could find an easy to handle way to run Spark, `https://github.com/jesonora/spark-infra`.
 
 ### Usage
 
