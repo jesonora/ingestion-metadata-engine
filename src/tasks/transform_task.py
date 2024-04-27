@@ -8,7 +8,7 @@ from src.base import SparkTemplate
 logger = logging.getLogger(__name__)
 
 
-class TransfromInput(SparkTemplate):
+class TransformInput(SparkTemplate):
     """
     This class represents a Luigi task for preprocessing raw files. It initiates the preprocessing task by calling
     the main function of the file: `src.process.preprocess.launch_preprocess`.

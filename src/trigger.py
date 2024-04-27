@@ -4,9 +4,8 @@ from datetime import date, datetime, timedelta
 
 import luigi
 import yaml
-from luigi import IntParameter, Parameter
 
-from src.tasks.transform_task import TransfromInput
+from src.tasks.transform_task import TransformInput
 
 warnings.filterwarnings("ignore")
 
