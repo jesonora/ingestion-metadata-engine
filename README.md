@@ -19,11 +19,27 @@ This project is a metadata ingestion engine developed using Apache Spark. It ena
 
 In the following repository you could find an easy to handle way to run Spark, `https://github.com/jesonora/spark-infra`.
 
+### Data Structure
+└── data
+    ├── output
+    │   ├── events
+    │   │   └── person
+    │   │       ├── (Output files related to specific person's events)
+    │   ├── discards
+    │   │   └── person
+    │   │       ├── (Discarded items related to specific person)
+    ├── input
+    │   ├── events
+    │   │   └── person
+    │   │       ├── (Input files related to specific person's events)
+    ├── logs
+    │   ├── (Pipeline's log files)
+
 ### Usage
 
 1. Setup repository
-2. Setup mock data running `sh mock_data/create_data.sh`
-3. Configure the `config/config_dev.yml` file
+2. Setup mock data running `sh mock_data/create_data.sh`, it will create the data structure and add some mock data.
+3. Configure the `config/config_dev.yml` file, adding more transformations, or inputs/outputs.
 4. In a terminal execute
    ```shell
    export PYTHONPATH="${PYTHONPATH}:$(pwd)"
