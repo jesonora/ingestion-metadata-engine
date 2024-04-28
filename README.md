@@ -20,6 +20,8 @@ This project is a metadata ingestion engine developed using Apache Spark. It ena
 In the following repository you could find an easy to handle way to run Spark, `https://github.com/jesonora/spark-infra`.
 
 ### Data Structure
+
+```
 └── data
     ├── output
     │   ├── events
@@ -34,6 +36,7 @@ In the following repository you could find an easy to handle way to run Spark, `
     │   │       ├── (Input files related to specific person's events)
     ├── logs
     │   ├── (Pipeline's log files)
+```
 
 ### Usage
 
