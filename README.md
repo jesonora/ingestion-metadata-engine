@@ -26,10 +26,10 @@ In the following repository you could find an easy to handle way to run Spark, `
     ├── output
     │   ├── events
     │   │   └── person
-    │   │       ├── (Output files related to specific person's events)
+    │   │       ├── (Output files related to person's events)
     │   ├── discards
     │   │   └── person
-    │   │       ├── (Discarded items related to specific person)
+    │   │       ├── (Discarded items related to persons)
     ├── input
     │   ├── events
     │   │   └── person
